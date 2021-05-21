@@ -36,8 +36,8 @@ import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 @RequestMapping(path = {"/","/user"})
 public class UserResource {
 
-    public static final String EMAIL_SENT = "An email with a new password was sent to: ";
-    public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
+    private static final String EMAIL_SENT = "An email with a new password was sent to: ";
+    private static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
     private AuthenticationManager authenticationManager;
     private UserService userService;
     private JWTTokenProvider jwtTokenProvider;
@@ -58,13 +58,13 @@ public class UserResource {
         return new ResponseEntity<>(loginUser,jwtHeader, OK);
     }
 
-    private HttpHeaders getJWTHeader(UserPrincipal userPrincipal) {
+    public HttpHeaders getJWTHeader(UserPrincipal userPrincipal) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(JWT_TOKEN_HEADER,jwtTokenProvider.generateJwtToken(userPrincipal));
         return headers;
     }
 
-    private void authenticate(String username, String password) {
+    public void authenticate(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
     }
 
@@ -119,7 +119,7 @@ public class UserResource {
         return response(OK, EMAIL_SENT + email);
     }
 
-    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+    public ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
     }
