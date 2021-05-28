@@ -37,11 +37,13 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             response.setStatus(HttpStatus.OK.value());
         }else{
             String authorizationHeader = request.getHeader(AUTHORIZATION);
+            System.out.println("Token received in Header: " + authorizationHeader);
             if (authorizationHeader == null || !authorizationHeader.startsWith(TOKEN_PREFIX)) {
                 filterChain.doFilter(request,response);
                 return;
             }else{
                 String token = authorizationHeader.substring(TOKEN_PREFIX.length());
+                System.out.println("Actual token received : " + token);
                 String userName = jwtTokenProvider.getSubject(token);
                 if(jwtTokenProvider.isTokenValid(userName, token) && SecurityContextHolder.getContext().getAuthentication() == null){
                     List<GrantedAuthority> authorityList = jwtTokenProvider.getAuthorities(token);
